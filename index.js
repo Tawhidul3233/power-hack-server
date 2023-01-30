@@ -21,25 +21,42 @@ const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology:
 async function run() {
 
   try {
+    // create bills collection
     const billCollection = client.db('powerhack').collection('bills');
+    // create user collection
+    const usersCollection = client.db('powerhack').collection('users');
 
-
-
-    app.get('/billing-list', async (req, res) => {
+// get all billing list api
+    app.get('/api/billing-list', async (req, res) => {
       const query = {};
       const cursor = billCollection.find(query);
       const product = await cursor.toArray()
       res.send(product)
     })
 
-    app.post('/add-billing', async (req, res) => {
+
+    // user collection api
+    app.post('/api/registration', async(req, res)=>{
+      const user = req.body;
+      const query = {email: user.email};
+      const cursor = await usersCollection.findOne(query);
+      if(cursor) return ;
+      const result = await usersCollection.insertOne(user)
+      res.send(result)
+    })
+
+    // api to add new billing and billing id create server respons success in the list
+    app.post('/api/add-billing', async (req, res) => {
       const bill = req.body;
+      const billingId = Math.floor(Math.random() * 1000000000);
+      bill.billingId = billingId;
       const result = await billCollection.insertOne(bill);
       res.send(result)
     })
 
 
-    app.delete("/delete-billing/:id", async (req, res) => {
+    // api to delete any bill in the billing list
+    app.delete("/api/delete-billing/:id", async (req, res) => {
       const id = req.params.id;
       console.log(id)
       const query = { _id: new ObjectId(id) };
