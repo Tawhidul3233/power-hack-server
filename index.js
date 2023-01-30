@@ -50,41 +50,6 @@ async function run() {
     })
 
 
-    app.get("/add-billing/:key", async(req, res)=>{
-      // const searchKey = req.params.key;
-      console.log(req.params.key)
-      // const query = {name:searchKey}
-      // const query2 = { email:searchKey}
-      // const query3 = { phone:searchKey}
-      // let query ;
-      // if(typeof(searchKey) === 'string'){
-      //   query = {name : searchKey}
-      // }
-      // else if( typeof(searchKey) === 'number'){
-      //   query = {phone : searchKey}
-      // }
-      // else if(searchKey.includes('@')){
-      //   query = {email : searchKey}
-      // }
-
-      let data = await billCollection.find(
-        {
-          "$or":[
-            {"name":{$regex:req.params.key}},
-            {"email":{$regex:req.params.key}},
-            {"phone":{$regex:req.params.key}}
-          ]
-        }
-      )
-      
-  
-      
-      res.send(data)
-      console.log(data)
-    })
-
-
-
   }
   finally {
 
