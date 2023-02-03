@@ -54,6 +54,24 @@ async function run() {
       res.send(result)
     })
 
+    // update bill information api
+    app.put('/api/update-billing/:id', async(req, res)=>{
+      const id = req.params.id;
+      const filter = {_id: ObjectId(id)}
+      const option = {upsert: true}
+      const bill = req.body;
+      const updateBill = {
+        $set : {
+          name: bill.name,
+          email: bill.email,
+          amount: bill.amount,
+          phone: bill.phone
+        }
+      }
+      const result = await billCollection.updateOne(filter, updateBill, option)
+      res.send(result)
+    })
+
 
     // api to delete any bill in the billing list
     app.delete("/api/delete-billing/:id", async (req, res) => {
